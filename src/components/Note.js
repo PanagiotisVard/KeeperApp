@@ -2,14 +2,14 @@
 import React from "react";
 
 
-
-function Note(){
+//This function is being called to create a Note.The "props" argument 
+//helps us to have access in data from other files.
+function Note(props){
 
     return(<div className="note">
-        <h1>Note Title</h1>
-        <p>content</p>
+        <h1>{props.title}</h1>
+        <p>{props.content}</p>
     </div>
-
     );
 }
 
