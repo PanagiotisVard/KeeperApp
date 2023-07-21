@@ -1,44 +1,45 @@
 //We are importing React library in every file because this library is very important
 import React, { useState } from "react";
-//Here we import Header.js file as "Header" to have access into the component Header.js file has
+//Here we import Header.js file as "Header" to have access into the component Header.js
 import Header from "./Header";
-//Here we import Footer.js file as "Footer" to have access into the component Footer.js file has
+//Here we import Footer.js file as "Footer" to have access into the component Footer.js
 import Footer from "./Footer";
-//Here we import Note.js file as "Note" to have access into the component Note.js file has
+//Here we import Note.js file as "Note" to have access into the component Note.js
 import Note from "./Note";
+//Here we import CreateArea.js file as "CreateArea" to have access into the component CreateArea.js
 import CreateArea from "./CreateArea";
 
-//We created this function to create a Note for each object the notes.js file has.
-//This function will be called by map() as many times as the number of our objects inside the  list
-// function createNotes(noteItem) {
-//   //we call the <Note/> function with 2 arguments. The title and the content of the Note.
-//   return (
-//     <Note
-//       key={noteItem.key}
-//       title={noteItem.title}
-//       content={noteItem.content}
-//     />
-//   );
-// }
+function App() {
+  //In order to use the <Header />, <CreateArea/> <Note/> <Footer/> functions we must import them first.
 
-function App(){
-  //In order to use the <Header /> function we must import first.
+  //creating the variable "notes" that is "connected" with the function setNotes
+  //the initialized value of the variable is set on useState and it is set to : []
+  //setNotes can be used to change the value of notes
   const [notes, setNotes] = useState([]);
 
+  //addNote is used to add a new Note
   function addNote(newNote) {
-    setNotes(prevNotes => {
+    //changing the value of the "notes" variable by calling the function
+    //setNotes. But in order to save the previous vars and add the new ones in the same list
+    // we use the function prevNotes and return:
+    //...prevNotes: All the previous notes that have been written
+    //newNote: All the new notes
+    setNotes((prevNotes) => {
       return [...prevNotes, newNote];
     });
   }
 
+  //deleteNote is used to delete a Note.
+  //this function is similar to the addNote() function.
   function deleteNote(id) {
-    setNotes(prevNotes => {
+    setNotes((prevNotes) => {
+      //filter the list of the previous notes and find a note with a specific index/id
       return prevNotes.filter((noteItem, index) => {
         return index !== id;
       });
     });
   }
-
+  // Component rendering.
   return (
     <div>
       <Header />

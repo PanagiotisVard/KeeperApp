@@ -1,14 +1,14 @@
 //We are importing React library in every file because this library is very important
 import React from "react";
 
-
+//Just getting the year 
 function Year(){
     const currentYear = new Date().getFullYear();
 
     return currentYear
 }
 
-
+// Footer component definition.
 function Footer(){
 
     const currentYear = Year()
@@ -24,4 +24,6 @@ function Footer(){
     );
 }
 
+
+//EXPORT IS IMPORTANT!!
 export default Footer;
