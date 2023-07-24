@@ -11,6 +11,10 @@ function Note(props) {
     props.onDelete(props.id);
   }
 
+  function onEdit(){
+
+  }
+
   return (
     <div className="note">
     {/* props.title & props.content is used to get the title and 
@@ -19,7 +23,8 @@ function Note(props) {
       <p>{props.content}</p>
       {/* Inside the button tag we set the argument onClick
       to give functionability to our button if it is pressed */}
-      <button onClick={handleClick}>DELETE</button>
+      <button onClick={handleClick}>Delete</button>
+      <button onClick={onEdit}>Edit</button>
     </div>
   );
 }
