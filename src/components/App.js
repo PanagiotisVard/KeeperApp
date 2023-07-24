@@ -7,6 +7,7 @@ import Footer from "./Footer";
 //Here we import Note.js file as "Note" to have access into the component Note.js
 import Note from "./Note";
 //Here we import CreateArea.js file as "CreateArea" to have access into the component CreateArea.js
+
 import CreateArea from "./CreateArea";
 import Axios from "axios";
 
@@ -17,74 +18,100 @@ function App() {
   //the initialized value of the variable is set on useState and it is set to : []
   //setNotes can be used to change the value of notes
   const [notes, setNotes] = useState([]);
+  const [noteForDeletion, setNoteForDeletion] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect( () => {
-    async function getNotesFromAPI(){
-      var dbnotes = await Axios.get("http://localhost:1337/api/notes");
-      console.log(dbnotes.data.data);
-      const newNotes = [];
-      dbnotes.data.data.forEach(note => {
-        newNotes.push({title:note.attributes.title,content:note.attributes.content});
+  // console.log("note for deletion has the value: "+noteForDeletion)
+  async function fetchNotes() {
+    const dbnotes = await Axios.get("http://localhost:1337/api/notes");
+    const newNotes = [];
+
+    dbnotes.data.data.forEach((note) => {
+      newNotes.push({
+        title: note.attributes.title,
+        content: note.attributes.content,
+        id: note.id,
       });
-      console.log(newNotes);
-      
-      setNotes(newNotes);
-    }
-   
-    getNotesFromAPI();
-  }, [notes]);
+    });
+
+    setNotes(newNotes);
+  }
+  // console.log(notes)
+  useEffect(() => {
+    if (noteForDeletion !== null) return;
+    fetchNotes();
+  }, [noteForDeletion]);
+
+  console.log(notes);
 
   //addNote is used to add a new Note
-  function addNote(newNote) {
+  async function addNotesFromAPI(newNote) {
+    setLoading(true);
 
-    async function addNotesFromAPI(){
-     const data = {
-      "data":
-      {
-        "title": newNote.title,
-        "content": newNote.content,
-      }
+    const data = {
+      data: {
+        title: newNote.title,
+        content: newNote.content,
+      },
+    };
+
+    try {
+      const response = await Axios.post(
+        "http://localhost:1337/api/notes",
+        data
+      );
+      const newNoteData = {
+        title: response.data.data.attributes.title,
+        content: response.data.data.attributes.content,
+        id: response.data.data.id,
       };
-      var notes = await Axios.post("http://localhost:1337/api/notes",data);
-      // console.log(notes);
-      setNotes((prevNotes) => {
-        return [...prevNotes, data];
-      });
-    }
-   
-    addNotesFromAPI();
-    //changing the value of the "notes" variable by calling the function
-    //setNotes. But in order to save the previous vars and add the new ones in the same list
-    // we use the function prevNotes and return:
-    //...prevNotes: All the previous notes that have been written
-    //newNote: All the new notes
 
+      setNotes((prevNotes) => {
+        return [...prevNotes, newNoteData];
+      });
+    } catch (error) {
+      console.log("Error adding note: ", error);
+    }
+    setLoading(false);
   }
 
   //deleteNote is used to delete a Note.
   //this function is similar to the addNote() function.
-  function deleteNote(id) {
-    setNotes((prevNotes) => {
-      //filter the list of the previous notes and find a note with a specific index/id
-      return prevNotes.filter((noteItem, index) => {
-        return index !== id;
+  async function deleteNote(id) {
+    setLoading(true);
+
+    setNoteForDeletion(id);
+    try {
+      await Axios.delete(`http://localhost:1337/api/notes/${id}`);
+
+      setNotes((prevNotes) => {
+        //filter the list of the previous notes and find a note with a specific index/id
+        return prevNotes.filter((noteItem) => noteItem.id !== id);
       });
-    });
+    } catch (error) {
+      console.log("Error found: ", error);
+    }
+    setLoading(false);
   }
+
   // Component rendering.
   return (
     <div>
       <Header />
-      <CreateArea onAdd={addNote} />
+      <CreateArea onAdd={addNotesFromAPI} />
       {notes.map((noteItem, index) => {
-        {/* console.log(noteItem); */}
+        {
+          /* {
+          console.log(noteItem);
+        } */
+        }
         return (
           <Note
             key={index}
             id={index}
             title={noteItem.title}
             content={noteItem.content}
-            onDelete={deleteNote}
+            onDelete={() => deleteNote(noteItem.id)}
           />
         );
       })}

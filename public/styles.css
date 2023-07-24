@@ -115,3 +115,16 @@ form button {
   outline: none;
 }
 
+/* loading.css */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
