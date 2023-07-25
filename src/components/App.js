@@ -4,14 +4,16 @@ import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
 import Axios from "axios";
+import io from "socket.io-client";
+
+
 
 function App() {
-
   const [notes, setNotes] = useState([]);
   const [noteForDeletion, setNoteForDeletion] = useState(null);
   const [loading, setLoading] = useState(false);
+  const socket = io.connect("http://192.168.1.158:3001");
 
-  // console.log("note for deletion has the value: "+noteForDeletion)
   async function fetchNotes() {
     const dbnotes = await Axios.get("http://192.168.1.158:1337/api/notes");
     const newNotes = [];
@@ -23,16 +25,17 @@ function App() {
         id: note.id,
       });
     });
-
     setNotes(newNotes);
   }
-  console.log(noteForDeletion)
+
   useEffect(() => {
     if (noteForDeletion !== null) return;
     fetchNotes();
-  }, [noteForDeletion]);
 
-  // console.log(notes);
+    socket.on("receive_note", (data) => {
+      alert(data.data);
+    });
+  }, [socket]);
 
   //addNote is used to add a new Note
   async function addNotesFromAPI(newNote) {
@@ -55,7 +58,10 @@ function App() {
         content: response.data.data.attributes.content,
         id: response.data.data.id,
       };
-
+      //new line
+      socket.emit("add_note", data);
+      // console.log(newNoteData);
+      
       setNotes((prevNotes) => {
         return [...prevNotes, newNoteData];
       });
@@ -79,13 +85,10 @@ function App() {
       });
 
       setNoteForDeletion(null);
-      
     } catch (error) {
       console.log("Error found: ", error);
     }
     setLoading(false);
-
-
   }
 
   // Component rendering.
@@ -105,7 +108,7 @@ function App() {
             title={noteItem.title}
             content={noteItem.content}
             onDelete={() => deleteNote(noteItem.id)}
-            onEdit={() => handleEdit(noteItem.id)} // Pass the handleEdit function
+            // onEdit={() => handleEdit(noteItem.id)} // Pass the handleEdit function
           />
         ))
       )}

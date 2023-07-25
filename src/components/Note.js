@@ -24,7 +24,7 @@ function Note(props) {
       {/* Inside the button tag we set the argument onClick
       to give functionability to our button if it is pressed */}
       <button onClick={handleClick}>Delete</button>
-      <button onClick={onEdit}>Edit</button>
+      {/* <button onClick={onEdit}>Edit</button> */}
     </div>
   );
 }
