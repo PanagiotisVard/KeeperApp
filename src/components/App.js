@@ -75,7 +75,7 @@ function App() {
     }
     setLoading(false);
   }
-
+//test
   //deleteNote is used to delete a Note.
   //this function is similar to the addNote() function.
   async function deleteNote(id) {
