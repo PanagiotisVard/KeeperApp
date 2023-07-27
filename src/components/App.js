@@ -33,7 +33,9 @@ function App() {
   
     socket.on("receive_note", (data) => {
       // console.log("Received data:", data);
-      alert(JSON.stringify(data)); // Convert to a string before alerting
+      setNotes((prevNotes) => {
+        return [...prevNotes, data];
+      });
     });
   
     fetchNotes();
