@@ -89,6 +89,9 @@ function App() {
         return prevNotes.filter((noteItem) => noteItem.id !== id);
       });
 
+      // socket.emit("receivedel_note", notes);
+
+
       setNoteForDeletion(null);
     } catch (error) {
       console.log("Error found: ", error);
