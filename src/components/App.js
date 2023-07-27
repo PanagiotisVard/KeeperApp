@@ -6,13 +6,13 @@ import CreateArea from "./CreateArea";
 import Axios from "axios";
 import io from "socket.io-client";
 
-
+const socket = io.connect("http://192.168.1.158:3001");
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [noteForDeletion, setNoteForDeletion] = useState(null);
   const [loading, setLoading] = useState(false);
-  const socket = io.connect("http://192.168.1.158:3001");
+  
 
   async function fetchNotes() {
     const dbnotes = await Axios.get("http://192.168.1.158:1337/api/notes");
@@ -30,12 +30,15 @@ function App() {
 
   useEffect(() => {
     if (noteForDeletion !== null) return;
-    fetchNotes();
-
+  
     socket.on("receive_note", (data) => {
-      alert(data.data);
+      // console.log("Received data:", data);
+      alert(JSON.stringify(data)); // Convert to a string before alerting
     });
+  
+    fetchNotes();
   }, [socket]);
+  
 
   //addNote is used to add a new Note
   async function addNotesFromAPI(newNote) {
