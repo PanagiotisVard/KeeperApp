@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
 import Axios from "axios";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 
 const socket = io.connect("http://192.168.1.158:3001");
 
@@ -30,15 +30,15 @@ function App() {
 
   useEffect(() => {
     if (noteForDeletion !== null) return;
-  
+    fetchNotes();
+
     socket.on("receive_note", (data) => {
       // console.log("Received data:", data);
       setNotes((prevNotes) => {
         return [...prevNotes, data];
       });
     });
-  
-    fetchNotes();
+
   }, [socket]);
   
 
