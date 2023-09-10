@@ -6,4 +6,4 @@ To run this application you have to open 3 terminals.
 3.for the database(Strapi)
 
 To run successfully run : npm install on the KeeperApp folder
-afterwards run : nom start to each terminal
+afterwards run : npm start to each terminal
